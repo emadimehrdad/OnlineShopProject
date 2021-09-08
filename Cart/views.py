@@ -26,9 +26,8 @@ class CartAddProductView(FormView):
 
 class CartRemoveView(View):
 
-    def post(self, request):
-        product_id = request.POST.get('product_id')
-        product = Product.objects.filter(id=product_id)
+    def post(self, request, product_id):
+        product = Product.objects.get(id=product_id)
         cart = Cart(request)
         cart.remove(product)
         return redirect('Cart:cart_detail')
@@ -39,6 +38,10 @@ class CartDetailView(TemplateView):
 
     def get_context_data(self, **kwargs):
         cart = Cart(self.request)
+        for item in cart:
+            item['update_quantity_form'] = CartAddProductForm(initial={
+                'quantity': item['quantity'],
+                'override': True})
         context = super().get_context_data()
         context['cart'] = cart
         return context

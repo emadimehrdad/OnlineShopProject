@@ -36,6 +36,7 @@
                 <input type="submit" value="Update">
                 {% csrf_token %}
               </form>
+{#                {{ item.quantity }}#}
             </td>
             <td>
               <form action="{% url "Cart:cart_remove" product.id %}" method="post">
