@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView
 
+from Cart.forms import CartAddProductForm
 from .models import Category, Product
 
 # Create your views here.
@@ -42,3 +43,9 @@ class ProductDetailView(DetailView):
     template_name = "shop/product/product_detail.html"
     queryset = Product.objects.filter(available=True)
     context_object_name = "product"
+    cart_product_form = CartAddProductForm()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['cart_product_form'] = self.cart_product_form
+        return context
