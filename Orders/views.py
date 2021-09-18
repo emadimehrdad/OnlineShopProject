@@ -7,7 +7,7 @@ from django.views.generic import FormView, TemplateView
 from Cart.cart import Cart
 from .forms import OrderCreateForm
 from .models import OrderItem
-
+from .tasks import order_created
 
 class OrderCreateView(FormView):
     form_class = OrderCreateForm
@@ -23,6 +23,7 @@ class OrderCreateView(FormView):
                                      quantity=item['quantity'],
                                      price=item['price'])
         cart.clear()
+        order_created.delay(self.order.id)
         return super(OrderCreateView, self).form_valid(form)
 
     def get_success_url(self):

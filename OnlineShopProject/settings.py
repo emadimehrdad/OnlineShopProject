@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'Shop',
     'Cart',
     'Orders',
+    'Coupons'
 ]
 
 MIDDLEWARE = [
@@ -50,9 +51,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'OnlineShopProject.urls'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 TEMPLATES = [
     {
