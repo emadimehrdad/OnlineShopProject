@@ -9,6 +9,7 @@ from .forms import OrderCreateForm
 from .models import OrderItem
 from .tasks import order_created
 
+
 class OrderCreateView(FormView):
     form_class = OrderCreateForm
     success_url = reverse_lazy("Orders:order_created")
@@ -16,13 +17,18 @@ class OrderCreateView(FormView):
 
     def form_valid(self, form):
         cart = Cart(self.request)
-        self.order = form.save()
+        self.order = form.save(commit=False)
+        if cart.coupon:
+            self.order.coupon = cart.coupon
+            self.order.discount = cart.coupon.discount
+        self.order.save()
         for item in cart:
             OrderItem.objects.create(order=self.order,
                                      product=item['product'],
                                      quantity=item['quantity'],
                                      price=item['price'])
         cart.clear()
+        cart.remove_coupon()
         order_created.delay(self.order.id)
         return super(OrderCreateView, self).form_valid(form)
 
