@@ -5,6 +5,7 @@ from Cart.forms import CartAddProductForm
 from .models import Category, Product
 
 # Create your views here.
+from .recommender import Recommender
 
 
 class ProductListView(ListView):
@@ -47,5 +48,8 @@ class ProductDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
+        r = Recommender()
+        recommended_products = r.suggest_products_for([kwargs['object']], 4)
         context['cart_product_form'] = self.cart_product_form
+        context['recommended_products'] = recommended_products
         return context

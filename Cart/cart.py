@@ -78,5 +78,6 @@ class Cart(object):
         return self.get_total_price() - self.get_discount()
 
     def remove_coupon(self):
-        del self.session['coupon_id']
-        self.save()
+        if 'coupon_id' in self.session:
+            del self.session['coupon_id']
+            self.save()

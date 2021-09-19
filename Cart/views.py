@@ -1,9 +1,11 @@
+from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import FormView, DeleteView, DetailView, TemplateView
 
 from Shop.models import Product
+from Shop.recommender import Recommender
 from .cart import Cart
 from .forms import CartAddProductForm
 from Coupons.forms import CouponApplyForm
@@ -43,8 +45,12 @@ class CartDetailView(TemplateView):
             item['update_quantity_form'] = CartAddProductForm(initial={
                 'quantity': item['quantity'],
                 'override': True})
+        r = Recommender()
+        cart_products = [item['product'] for item in cart]
+        recommended_products = r.suggest_products_for(cart_products, max_result=4)
         coupon_apply_form = CouponApplyForm()
         context = super().get_context_data()
         context['cart'] = cart
         context['coupon_apply_form'] = coupon_apply_form
+        context['recommended_products'] = recommended_products
         return context

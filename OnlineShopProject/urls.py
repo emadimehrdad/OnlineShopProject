@@ -22,5 +22,4 @@ urlpatterns = [
     path('coupons/', include('Coupons.urls', namespace='Coupons')),
     path('', include("Shop.urls", namespace='Shop')),
     path('', include("Orders.urls", namespace='Orders')),
-
 ]
